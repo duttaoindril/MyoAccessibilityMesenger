@@ -1,0 +1,48 @@
+h1{
+  padding-left:1em;
+}
+
+.time {
+  padding-top: 1em;
+  padding-bottom: .5em;
+  text-color: red;
+}
+.name {
+  align: right;
+  padding-top: 1em;
+  padding-left: .5em;
+  padding-right: 1em;
+}
+.text {
+  overflow: auto;
+  max-width: 13em;
+  width: 13em;
+    padding-left: .5em;
+
+  padding-bottom: 1em;
+}
+.chat-window {
+  display: table;
+  padding-left: 2em;
+}
+.field {
+  padding-top: 1em;
+  padding-left: 2em;
+}
+
+.message{
+  border: 1em;
+}
+.even .message{
+  background-color: #D3F6F6;
+}
+.odd .message{
+  background-color: #EFFFF2;
+}
+
+.row {
+  display: table-row;
+}
+.cell {
+  display: table-cell;
+}
