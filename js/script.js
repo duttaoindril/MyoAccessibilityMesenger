@@ -10,7 +10,7 @@ function TestCase(testdata) {
 
 function DashboardCtrl($http) {
   this.tests = [];
-  $http.get('../data.json').success(
+  $http.get('data.json').success(
     this.populateTestData.bind(this));
 }
 
