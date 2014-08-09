@@ -3,8 +3,12 @@
     <title>Dumper - Myo</title>
     <script src="../myojs-0.8.6.js"></script>
     <script>
+        left = true;
+        down = false;
+        sidewaysdown = false;
+        handup = false;
+        
         var hub = new Myo.Hub();
-
         hub.on('ready', function() {
             console.log("ready");
         });
@@ -12,8 +16,73 @@
             console.log("connected!");
         });
         hub.on('frame', function(frame) {
-            document.getElementById('out').innerHTML = frame.rotation;
+            document.getElementById('identity').innerHTML = frame.id;
         });
+        hub.on('frame', function(frame) {
+            document.getElementById('timestamp').innerHTML = frame.timestamp;
+        });
+        hub.on('frame', function(frame) {
+            document.getElementById('rotation').innerHTML = frame.rotation;
+        });
+        hub.on('frame', function(frame) {
+            document.getElementById('euler').innerHTML = "[Euler roll: " + frame.euler["roll"] + " pitch: " + frame.euler["pitch"] + " yaw: " + frame.euler["yaw"] + "]";
+        });
+        hub.on('frame', function(frame) {
+            document.getElementById('accel').innerHTML = frame.accel;
+        });
+        hub.on('frame', function(frame) {
+            document.getElementById('gyro').innerHTML = frame.gyro;
+        });
+        hub.on('frame', function(frame) {
+            document.getElementById('pose').innerHTML = frame.pose;
+        });
+        hub.on('frame', function(frame) {
+            if(frame.accel["x"] > .9)
+                document.getElementById('accelup').innerHTML = document.getElementById('accelup').innerHTML + " hand up " + "\t";
+        });
+        hub.on('frame', function(frame) {
+            if(frame.pose["valid"] && frame.pose["type"] != 0)
+                document.getElementById('poserecord').innerHTML = document.getElementById('poserecord').innerHTML + frame.pose + "\t";
+        });
+        hub.on('frame', function(frame) {
+            if(frame.euler["roll"] < 1.25 && !left)
+            {
+                document.getElementById('waveroll').innerHTML = document.getElementById('waveroll').innerHTML + " left ";
+                left = true;
+            }
+            if(frame.euler["roll"] > 1.25 && left)
+            {
+                document.getElementById('waveroll').innerHTML = document.getElementById('waveroll').innerHTML + " right ";
+                left = false;
+            }
+        });
+        
+        hub.on('frame', function(frame) {
+            if(frame.euler["pitch"] > -1 && !down)
+            {
+                document.getElementById('wavepitch').innerHTML = document.getElementById('wavepitch').innerHTML + " down ";
+                down = true;
+            }
+            if(frame.euler["pitch"] < -1 && down)
+            {
+                document.getElementById('wavepitch').innerHTML = document.getElementById('wavepitch').innerHTML + " up ";
+                down = false;
+            }
+        });
+        
+        hub.on('frame', function(frame) {
+            if(frame.euler["pitch"] > 0 && !sidewaysdown)
+            {
+                document.getElementById('waveyaw').innerHTML = document.getElementById('waveyaw').innerHTML + " sidedown ";
+                sidewaysdown = true;
+            }
+            if(frame.euler["pitch"] < 0 && sidewaysdown)
+            {
+                document.getElementById('waveyaw').innerHTML = document.getElementById('waveyaw').innerHTML + " sideup ";
+                sidewaysdown = false;
+            }
+        });
+        
         hub.on('disconnect', function() {
             console.log("disconnect");
         });
@@ -22,7 +91,17 @@
 <body>
 <button onclick="hub.myo.vibrate(hub.myo.VIBRATION_LONG);">Vibrate</button>
   <pre>
-    <div id="out"></div>
-  </pre>
+    <div id="identity"></div>
+    <div id="timestamp"></div>
+    <div id="rotation"></div>
+    <div id="euler"></div>
+    <div id="accel"></div>
+    <div id="gyro"></div>
+    <div id="pose"></div>
+    <div id="poserecord" style="max-with:100%; word-wrap:break-word;"></div>
+    <div id="waveroll" style="max-with:100%; word-wrap:break-word;"></div>
+    <div id="wavepitch" style="max-with:100%; word-wrap:break-word;"></div>
+    <div id="waveyaw" style="max-with:100%; word-wrap:break-word;"></div>
+</pre>
 </body>
 </html>
